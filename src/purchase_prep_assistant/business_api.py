@@ -1,10 +1,4 @@
-"""Amazon Business official API client.
-
-The client uses Login with Amazon refresh-token exchange and sends requests to
-Amazon Business API regional endpoints. Endpoint paths are intentionally thin
-wrappers around the official REST API paths so the project can track Amazon's
-OpenAPI models with minimal glue code.
-"""
+"""Amazon Business official API client."""
 
 from __future__ import annotations
 
