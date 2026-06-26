@@ -1,0 +1,33 @@
+{
+  "project_name": "prime-sale-manual-review-sample",
+  "products": [
+    {
+      "name": "Amazon short link sample",
+      "url": "https://amzn.asia/d/0a7kZ6KA",
+      "quantity": 2,
+      "max_unit_price_jpy": 3000,
+      "note": "短縮URLはASINを抽出できないため、手動確認対象"
+    }
+  ],
+  "recipients": [
+    {
+      "label": "home",
+      "recipient_name": "山田 太郎",
+      "postal_code": "100-0001",
+      "prefecture": "東京都",
+      "city": "千代田区",
+      "line1": "千代田1-1",
+      "line2": "サンプルマンション101",
+      "phone": "03-0000-0000",
+      "note": "サンプル住所。実運用ではローカルまたはSecretsで管理してください。"
+    }
+  ],
+  "allocations": [
+    {
+      "product_name": "Amazon short link sample",
+      "recipient_label": "home",
+      "quantity": 2
+    }
+  ],
+  "safety_mode": "manual_review_only"
+}
