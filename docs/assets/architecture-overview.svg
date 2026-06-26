@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <rect width="1400" height="760" fill="#f7fbff"/>
+  <text x="700" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#0d47a1">全体アーキテクチャ / Architecture Overview</text>
+  <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L10,3 z" fill="#1565c0"/></marker></defs>
+  <g font-family="Arial, sans-serif" font-size="18">
+    <rect x="55" y="145" width="220" height="100" rx="18" fill="#e3f2fd" stroke="#1565c0" stroke-width="3"/>
+    <text x="165" y="185" text-anchor="middle" font-weight="700">購入計画JSON</text><text x="165" y="214" text-anchor="middle">purchase_plan.json</text>
+    <rect x="360" y="145" width="220" height="100" rx="18" fill="#e8f5e9" stroke="#2e7d32" stroke-width="3"/>
+    <text x="470" y="185" text-anchor="middle" font-weight="700">モデル検証</text><text x="470" y="214" text-anchor="middle">Pydantic Models</text>
+    <rect x="665" y="90" width="245" height="95" rx="18" fill="#fff8e1" stroke="#f9a825" stroke-width="3"/>
+    <text x="787" y="128" text-anchor="middle" font-weight="700">CSV / Excel / TXT</text><text x="787" y="157" text-anchor="middle">Exporter</text>
+    <rect x="665" y="230" width="245" height="95" rx="18" fill="#fff3e0" stroke="#ef6c00" stroke-width="3"/>
+    <text x="787" y="268" text-anchor="middle" font-weight="700">API Payload生成</text><text x="787" y="297" text-anchor="middle">Payload Builders</text>
+    <rect x="995" y="130" width="270" height="95" rx="18" fill="#ede7f6" stroke="#5e35b1" stroke-width="3"/>
+    <text x="1130" y="168" text-anchor="middle" font-weight="700">LWA Token</text><text x="1130" y="197" text-anchor="middle">Login with Amazon</text>
+    <rect x="995" y="280" width="270" height="95" rx="18" fill="#e0f7fa" stroke="#00838f" stroke-width="3"/>
+    <text x="1130" y="318" text-anchor="middle" font-weight="700">Amazon Business API</text><text x="1130" y="347" text-anchor="middle">Cart / Ordering</text>
+    <line x1="275" y1="195" x2="360" y2="195" stroke="#1565c0" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="580" y1="180" x2="665" y2="140" stroke="#1565c0" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="580" y1="210" x2="665" y2="275" stroke="#1565c0" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="910" y1="275" x2="995" y2="325" stroke="#1565c0" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="1130" y1="225" x2="1130" y2="280" stroke="#1565c0" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="105" y="500" width="1190" height="145" rx="20" fill="#ffffff" stroke="#90caf9" stroke-width="2"/>
+    <text x="140" y="545" font-size="22" font-weight="700" fill="#0d47a1">Main idea / 主要思想</text>
+    <text x="140" y="585">1つの購入計画JSONを、検証、ファイル出力、Cart API、Ordering APIで共通利用します。</text>
+    <text x="140" y="620">A single purchase plan powers validation, file exports, Cart API payloads, and Ordering API payloads.</text>
+  </g>
+</svg>
