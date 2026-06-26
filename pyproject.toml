@@ -4,14 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "purchase-prep-assistant"
-version = "0.1.0"
-description = "Safe Amazon purchase preparation assistant"
+version = "0.2.0"
+description = "Amazon Business purchase automation preparation and official API payload assistant"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "GitHub-GPT Developer"}]
 dependencies = [
     "fastapi>=0.115.0",
+    "httpx>=0.27.0",
     "openpyxl>=3.1.5",
     "pydantic>=2.7.0",
     "rich>=13.7.1",
@@ -21,7 +22,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "httpx>=0.27.0",
     "pytest>=8.2.0",
     "ruff>=0.5.0",
 ]
