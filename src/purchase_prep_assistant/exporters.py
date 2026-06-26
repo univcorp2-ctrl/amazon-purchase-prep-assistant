@@ -1,4 +1,4 @@
-"""Export purchase preparation plans to review-friendly files."""
+"""Export purchase automation plans to review-friendly and API-ready files."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from typing import Any
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
 
+from purchase_prep_assistant.business_payloads import build_cart_add_items_payload, build_order_payload
 from purchase_prep_assistant.models import PurchasePlan
 from purchase_prep_assistant.safety import SAFETY_POLICY_TEXT, assert_safe_plan, inspect_plan
 
@@ -30,9 +31,12 @@ def write_csv(plan: PurchasePlan, output_path: str | Path) -> Path:
             file,
             fieldnames=[
                 "project_name",
+                "workflow_mode",
+                "business_region",
                 "product_name",
                 "url",
                 "asin",
+                "buying_option_identifier",
                 "quantity",
                 "max_unit_price_jpy",
                 "note",
@@ -43,9 +47,12 @@ def write_csv(plan: PurchasePlan, output_path: str | Path) -> Path:
             writer.writerow(
                 {
                     "project_name": plan.project_name,
+                    "workflow_mode": plan.workflow_mode,
+                    "business_region": plan.business_region,
                     "product_name": product.name,
                     "url": product.url,
                     "asin": product.asin or "",
+                    "buying_option_identifier": product.buying_option_identifier or "",
                     "quantity": product.quantity,
                     "max_unit_price_jpy": product.max_unit_price_jpy or "",
                     "note": product.note,
@@ -58,11 +65,11 @@ def _add_header(ws: Any, values: list[str]) -> None:
     ws.append(values)
     for cell in ws[1]:
         cell.font = Font(bold=True, color="FFFFFF")
-        cell.fill = PatternFill(start_color="2E7D32", end_color="2E7D32", fill_type="solid")
+        cell.fill = PatternFill(start_color="1565C0", end_color="1565C0", fill_type="solid")
 
 
 def write_excel(plan: PurchasePlan, output_path: str | Path) -> Path:
-    """Write an Excel workbook with products, recipients, allocations, and safety notes."""
+    """Write an Excel workbook with products, recipients, allocations, and API setup notes."""
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
 
@@ -73,18 +80,32 @@ def write_excel(plan: PurchasePlan, output_path: str | Path) -> Path:
     summary.title = "Summary"
     _add_header(summary, ["Field", "Value"])
     summary.append(["Project", plan.project_name])
-    summary.append(["Safety mode", plan.safety_mode])
-    summary.append(["Safety OK", "yes" if report.ok else "no"])
+    summary.append(["Workflow mode", plan.workflow_mode])
+    summary.append(["Business region", plan.business_region])
+    summary.append(["Currency", plan.currency_code])
+    summary.append(["Plan OK", "yes" if report.ok else "no"])
     summary.append(["Warnings", " | ".join(report.warnings) if report.warnings else "none"])
 
     items = workbook.create_sheet("Items")
-    _add_header(items, ["Product", "URL", "ASIN", "Quantity", "Max unit price JPY", "Note"])
+    _add_header(
+        items,
+        [
+            "Product",
+            "URL",
+            "ASIN",
+            "Buying option identifier",
+            "Quantity",
+            "Max unit price JPY",
+            "Note",
+        ],
+    )
     for product in plan.products:
         items.append(
             [
                 product.name,
                 product.url,
                 product.asin or "",
+                product.buying_option_identifier or "",
                 product.quantity,
                 product.max_unit_price_jpy or "",
                 product.note,
@@ -94,7 +115,22 @@ def write_excel(plan: PurchasePlan, output_path: str | Path) -> Path:
     recipients = workbook.create_sheet("Recipients")
     _add_header(
         recipients,
-        ["Label", "Name", "Postal code", "Prefecture", "City", "Line1", "Line2", "Phone", "Note"],
+        [
+            "Label",
+            "Name",
+            "Postal code",
+            "Prefecture",
+            "City",
+            "Line1",
+            "Line2",
+            "Line3",
+            "Phone",
+            "Company",
+            "Country",
+            "Buyer email",
+            "External address ID",
+            "Note",
+        ],
     )
     for recipient in plan.recipients:
         recipients.append(
@@ -106,7 +142,12 @@ def write_excel(plan: PurchasePlan, output_path: str | Path) -> Path:
                 recipient.city,
                 recipient.line1,
                 recipient.line2,
+                recipient.line3,
                 recipient.phone,
+                recipient.company_name,
+                recipient.country_code,
+                recipient.buyer_email,
+                recipient.external_address_id,
                 recipient.note,
             ]
         )
@@ -116,12 +157,13 @@ def write_excel(plan: PurchasePlan, output_path: str | Path) -> Path:
     for allocation in plan.allocations:
         allocations.append([allocation.product_name, allocation.recipient_label, allocation.quantity])
 
-    safety = workbook.create_sheet("Safety")
-    _add_header(safety, ["Policy"])
-    for line in SAFETY_POLICY_TEXT.splitlines():
-        safety.append([line])
-    for warning in report.warnings:
-        safety.append([f"Warning: {warning}"])
+    setup = workbook.create_sheet("API Setup")
+    _add_header(setup, ["Key", "Value"])
+    setup.append(["Project scope", SAFETY_POLICY_TEXT])
+    setup.append(["Buying group reference", plan.buying_group_reference])
+    setup.append(["Payment method reference", plan.payment_method_reference])
+    setup.append(["Buyer reference", plan.buyer_reference])
+    setup.append(["Purchase order number", plan.purchase_order_number])
 
     for worksheet in workbook.worksheets:
         for column_cells in worksheet.columns:
@@ -133,107 +175,83 @@ def write_excel(plan: PurchasePlan, output_path: str | Path) -> Path:
 
 
 def write_checklist(plan: PurchasePlan, output_path: str | Path) -> Path:
-    """Write a human-readable manual checkout checklist."""
+    """Write a human-readable operations checklist."""
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     report = inspect_plan(plan)
 
     lines = [
-        f"# Manual purchase checklist: {plan.project_name}",
+        f"# Operations checklist: {plan.project_name}",
         "",
-        "This file is for human review only. It is not a checkout automation script.",
+        "## Project / プロジェクト",
+        f"- Workflow mode: {plan.workflow_mode}",
+        f"- Region: {plan.business_region}",
+        f"- Currency: {plan.currency_code}",
         "",
-        "## Safety policy",
-        SAFETY_POLICY_TEXT,
-        "",
-        "## Products",
+        "## Products / 商品",
     ]
     for index, product in enumerate(plan.products, start=1):
         lines.extend(
             [
                 f"{index}. {product.name}",
                 f"   - URL: {product.url}",
-                f"   - ASIN: {product.asin or 'manual confirmation required'}",
+                f"   - ASIN: {product.asin or 'ASIN_REQUIRED'}",
+                f"   - Buying option: {product.buying_option_identifier or 'BUYING_OPTION_IDENTIFIER_REQUIRED'}",
                 f"   - Quantity: {product.quantity}",
                 f"   - Max unit price JPY: {product.max_unit_price_jpy or 'not set'}",
-                f"   - Note: {product.note or '-'}",
             ]
         )
 
-    lines.extend(["", "## Recipient allocations"])
+    lines.extend(["", "## Recipients / 顧客・配送先"])
+    for recipient in plan.recipients:
+        lines.append(
+            f"- {recipient.label}: {recipient.recipient_name}, {recipient.postal_code}, {recipient.prefecture}{recipient.city}{recipient.line1}"
+        )
+
+    lines.extend(["", "## Allocations / 割当"])
     if plan.allocations:
         for allocation in plan.allocations:
             lines.append(
                 f"- {allocation.product_name}: {allocation.quantity} item(s) -> {allocation.recipient_label}"
             )
     else:
-        lines.append("- No allocations defined.")
+        lines.append("- All products are applied to the selected recipient when building an order payload.")
 
-    lines.extend(["", "## Warnings"])
-    if report.warnings:
-        lines.extend([f"- {warning}" for warning in report.warnings])
-    else:
-        lines.append("- none")
-
-    lines.extend(
-        [
-            "",
-            "## Manual final review",
-            "- Confirm product title, seller, price, quantity, delivery date, and return policy on Amazon.",
-            "- Confirm the delivery address manually inside the official Amazon or Amazon Business interface.",
-            "- Confirm payment method and organization approval rules manually.",
-            "- Do not use browser automation or bot-detection evasion to reach checkout.",
-        ]
-    )
+    lines.extend(["", "## Warnings / 確認事項"])
+    lines.extend([f"- {warning}" for warning in report.warnings] or ["- none"])
 
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return output
 
 
 def build_amazon_business_cart_template(plan: PurchasePlan) -> dict[str, Any]:
-    """Build a dry-run template for official Amazon Business API integration.
-
-    The template is intentionally not executable. Offer IDs, OAuth tokens, and
-    buying-group configuration must come from Amazon Business official setup.
-    """
+    """Build a Cart API addItems template."""
     return {
-        "mode": "dry_run_template_only",
-        "notice": "Use only with authorized Amazon Business API access. This file does not place orders.",
-        "cart_api": {
-            "operation_hint": "POST /cart/2025-04-30/carts/{cartId}/items",
-            "items": [
-                {
-                    "asin": product.asin or "MANUAL_ASIN_REQUIRED",
-                    "offerId": "OFFICIAL_API_OFFER_ID_REQUIRED",
-                    "quantity": product.quantity,
-                    "maxUnitPriceJpy": product.max_unit_price_jpy,
-                    "sourceUrl": product.url,
-                }
-                for product in plan.products
-            ],
-        },
-        "ordering_api": {
-            "operation_hint": "POST /ordering/2022-10-30/orders",
-            "requires": [
-                "OAuth/Login with Amazon authorization",
-                "AmazonBusinessOrderPlacement role",
-                "BuyingGroup reference",
-                "configured payment method",
-                "configured shipping addresses",
-                "organization approval rules",
-            ],
-        },
+        "api": "Amazon Business Cart API",
+        "path": "/cart/2025-04-30/carts/{cartId}/items",
+        "method": "POST",
+        "region": plan.business_region,
+        "payload": build_cart_add_items_payload(plan),
+    }
+
+
+def build_amazon_business_order_templates(plan: PurchasePlan) -> dict[str, Any]:
+    """Build one Ordering API payload per recipient."""
+    return {
+        recipient.label: build_order_payload(plan, recipient.label, trial=True)
+        for recipient in plan.recipients
     }
 
 
 def write_business_api_template(plan: PurchasePlan, output_path: str | Path) -> Path:
-    """Write a JSON template for official Amazon Business API integration design."""
+    """Write a JSON bundle for official Amazon Business API integration."""
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(
-        json.dumps(build_amazon_business_cart_template(plan), ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    payload = {
+        "cart_add_items": build_amazon_business_cart_template(plan),
+        "ordering_api_trial_payloads": build_amazon_business_order_templates(plan),
+    }
+    output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return output
 
 
