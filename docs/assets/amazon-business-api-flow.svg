@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <rect width="1400" height="760" fill="#f6f8ff"/>
+  <text x="700" y="55" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#283593">Amazon Business API連携 / Official API Flow</text>
+  <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="3" orient="auto"><path d="M0,0 L0,6 L10,3 z" fill="#3949ab"/></marker></defs>
+  <g font-family="Arial" font-size="16">
+    <rect x="70" y="130" width="260" height="120" rx="18" fill="#e8eaf6" stroke="#3949ab" stroke-width="3"/>
+    <text x="200" y="168" text-anchor="middle" font-weight="700">.env / Secrets</text><text x="200" y="198" text-anchor="middle">client_id / refresh_token</text><text x="200" y="225" text-anchor="middle">buyer_email / endpoint</text>
+    <rect x="420" y="130" width="260" height="120" rx="18" fill="#fff3e0" stroke="#ef6c00" stroke-width="3"/>
+    <text x="550" y="168" text-anchor="middle" font-weight="700">Login with Amazon</text><text x="550" y="198" text-anchor="middle">refresh token exchange</text><text x="550" y="225" text-anchor="middle">x-amz-access-token</text>
+    <rect x="770" y="100" width="260" height="115" rx="18" fill="#e0f2f1" stroke="#00897b" stroke-width="3"/>
+    <text x="900" y="138" text-anchor="middle" font-weight="700">Cart API</text><text x="900" y="168" text-anchor="middle">list / add / get</text><text x="900" y="195" text-anchor="middle">estimate total</text>
+    <rect x="770" y="280" width="260" height="115" rx="18" fill="#e1f5fe" stroke="#0277bd" stroke-width="3"/>
+    <text x="900" y="318" text-anchor="middle" font-weight="700">Ordering API</text><text x="900" y="348" text-anchor="middle">placeOrder</text><text x="900" y="375" text-anchor="middle">orderDetails</text>
+    <rect x="1110" y="190" width="230" height="120" rx="18" fill="#fce4ec" stroke="#ad1457" stroke-width="3"/>
+    <text x="1225" y="230" text-anchor="middle" font-weight="700">Amazon Business</text><text x="1225" y="260" text-anchor="middle">JP / FE endpoint</text><text x="1225" y="287" text-anchor="middle">Business account</text>
+    <line x1="330" y1="190" x2="420" y2="190" stroke="#3949ab" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="680" y1="180" x2="770" y2="155" stroke="#3949ab" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="680" y1="210" x2="770" y2="335" stroke="#3949ab" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="1030" y1="158" x2="1110" y2="230" stroke="#3949ab" stroke-width="4" marker-end="url(#arrow)"/>
+    <line x1="1030" y1="337" x2="1110" y2="270" stroke="#3949ab" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="165" y="500" width="1070" height="115" rx="18" fill="#ffffff" stroke="#c5cae9" stroke-width="2"/>
+    <text x="700" y="540" text-anchor="middle" font-size="21" font-weight="700">Cart APIのbuyingOptionIdentifierをOrdering APIのline itemへ渡す / Pass Cart API buyingOptionIdentifier into Ordering API line items</text>
+    <text x="700" y="580" text-anchor="middle" font-size="18">顧客ごとの配送先はRecipientProfileからShippingAddress属性へ変換 / RecipientProfile becomes the ShippingAddress attribute</text>
+  </g>
+</svg>
