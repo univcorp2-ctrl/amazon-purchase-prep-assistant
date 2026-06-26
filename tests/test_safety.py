@@ -13,6 +13,7 @@ BASE_PLAN = {
             "url": "https://www.amazon.co.jp/dp/B012345678",
             "quantity": 2,
             "max_unit_price_jpy": 1000,
+            "buying_option_identifier": "BOI-1",
         }
     ],
     "recipients": [
@@ -26,7 +27,7 @@ BASE_PLAN = {
         }
     ],
     "allocations": [{"product_name": "sample item", "recipient_label": "home", "quantity": 2}],
-    "safety_mode": "manual_review_only",
+    "workflow_mode": "business_api_trial_order",
 }
 
 
