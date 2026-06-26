@@ -1,34 +1,69 @@
-# Amazon Business API / MCP Research
+# Amazon Business API Research / 公式API調査
 
-## 公式APIの方向性
+## Summary / 要約
 
-Amazon Businessには、外部購買システムと連携するための公式APIがあります。個人向けAmazonのブラウザ画面をRPAで動かすより、法人購買では公式APIを使う設計が安全です。
+Amazon Businessには、購入システムから公式にカート管理・注文作成を行うAPIがあります。本リポジトリでは、Cart APIとOrdering APIのpayload生成、LWA token exchange、公式API HTTP client、CLIを実装しました。
+
+English: Amazon Business provides official APIs for cart management and ordering. This repository implements payload builders, Login with Amazon token exchange, a thin official API HTTP client, and CLI commands.
 
 ## Cart API
 
-Cart APIは、Amazon Businessのカートを外部システムから作成・変更・取得し、税金や送料を含む見積りを扱うためのAPIです。ASINとoffer IDはProduct Search APIから取得する前提です。
+Cart API operations include:
 
-このリポジトリでは実API呼び出しは行わず、`*-amazon-business-template.json` にdry-runテンプレートだけを出力します。
+- `GET /cart/2025-04-30/carts`
+- `GET /cart/2025-04-30/carts/{cartId}`
+- `GET /cart/2025-04-30/carts/{cartId}/items`
+- `POST /cart/2025-04-30/carts/{cartId}/items`
+- `PATCH /cart/2025-04-30/carts/{cartId}/items`
+- `DELETE /cart/2025-04-30/carts/{cartId}/items`
+- `POST /cart/2025-04-30/carts/{cartId}/totalPurchaseCostEstimations`
+
+Implementation:
+
+- `business_payloads.build_cart_add_items_payload()`
+- `AmazonBusinessClient.list_carts()`
+- `AmazonBusinessClient.add_items()`
+- `AmazonBusinessClient.get_items()`
+- `AmazonBusinessClient.estimate_total_purchase_cost()`
 
 ## Ordering API
 
-Ordering APIは、Amazon Businessの購入注文を外部購買システムから送信するためのAPIです。OAuth / Login with Amazon、Buying Group、支払い方法、配送先、承認ルールなどの事前設定が必要です。
+Ordering API operations include:
+
+- `POST /ordering/2022-10-30/orders`
+- `GET /ordering/2022-10-30/orders/{externalId}`
+
+Implementation:
+
+- `business_payloads.build_order_payload()`
+- `AmazonBusinessClient.place_order()`
+- `AmazonBusinessClient.order_details()`
 
 ## MCP
 
-Amazon Business公式の `ab-integrations-mcp-server` は、Amazon Business APIドキュメント、サンプルコード、トラブルシューティング情報へAI開発環境からアクセスするためのMCPです。購入画面を操作するMCPではなく、公式API統合を支援するためのものです。
+Amazon Business公式の `amazonbusiness/ab-integrations-mcp-server` は、AI開発環境からAmazon Business APIドキュメント、サンプルコード、トラブルシューティング情報を検索・参照するためのMCPです。
 
-## 本ツールで採用した範囲
+English: The official `amazonbusiness/ab-integrations-mcp-server` helps AI-enabled developer environments access Amazon Business API documentation, sample code, and troubleshooting references.
 
-- 購入計画JSONの検証
-- URL/ASINの静的解析
-- CSV/Excel/TXT/APIテンプレート生成
-- GitHub Actions artifact出力
+## Data needed from Amazon Business / Amazon Business側から取得する値
 
-## 採用しない範囲
+- Client ID
+- Client secret
+- Refresh token
+- Region / marketplace
+- API base URL
+- Buyer email
+- Buying Group reference
+- Payment Method reference
+- Buyer reference
+- ASIN and buyingOptionIdentifier for each line item
 
-- Chrome/Playwright/SeleniumでAmazon画面を操作する実装
-- カート投入・購入確認画面遷移・購入確定
-- 住所フォームの自動入力
-- CAPTCHA/2FA/ブロック回避
-- Amazon画面変更パターンの自動探索
+## Implementation map / 実装対応表
+
+| Official area | Repository file | CLI |
+|---|---|---|
+| LWA token | `business_api.py` | all `business-* --live` commands |
+| Cart API addItems | `business_api.py`, `business_payloads.py` | `business-add-items` |
+| Cart API listCarts | `business_api.py` | `business-list-carts` |
+| Ordering API placeOrder | `business_api.py`, `business_payloads.py` | `business-place-order` |
+| Address payload | `business_payloads.py` | `business-order-payload` |
