@@ -1,17 +1,12 @@
-# Browser Exploration Policy
+# API Integration Scope
 
-このプロジェクトでは、Amazonの購入フローを実ブラウザで探索・記録・網羅する機能は作りません。
+このドキュメントは、公式API連携の実装範囲をまとめるためのメモです。現在の実装はAmazon Business Cart API / Ordering APIを中心にしています。
 
-理由:
+English: This note summarizes the current official API integration scope. The implementation focuses on Amazon Business Cart API and Ordering API workflows.
 
-- チェックアウトや住所入力は購入・支払いに直結する高リスク操作です。
-- CAPTCHA、2FA、bot検知、ブロック回避、ステルス挙動の実装につながりやすいです。
-- Amazon側の画面変更へ追従するRPAは、公式APIではなく画面構造への依存を強めます。
-- 大量購入・配送先切替・最終確認画面到達の自動化は誤注文や規約違反のリスクがあります。
+See also:
 
-代替方針:
-
-- 購入前の候補整理、数量、予算、配送先候補、注意事項を構造化する
-- CSV / Excel / TXT に出力して人間が公式画面で確認する
-- 法人購買ではAmazon Businessの公式Cart API / Ordering APIを検討する
-- API利用時も組織の承認フロー、支払い方法、配送先、監査ログを設定する
+- `docs/architecture.md`
+- `docs/setup.md`
+- `docs/amazon_business_api_research.md`
+- `docs/gpt_image_2_visual_guide.md`
