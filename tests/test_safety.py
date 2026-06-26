@@ -46,6 +46,7 @@ def test_checkout_url_fails_policy() -> None:
             "quantity": 1,
         }
     ]
+    data["allocations"] = []
     plan = PurchasePlan.model_validate(data)
     report = inspect_plan(plan)
     assert not report.ok
