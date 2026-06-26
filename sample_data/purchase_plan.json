@@ -1,33 +1,66 @@
 {
-  "project_name": "prime-sale-manual-review-sample",
+  "project_name": "prime-sale-business-api-sample",
+  "workflow_mode": "business_api_trial_order",
+  "business_region": "JP",
+  "currency_code": "JPY",
+  "buying_group_reference": "BUYING_GROUP_REFERENCE_FROM_AMAZON_BUSINESS",
+  "payment_method_reference": "PAYMENT_METHOD_REFERENCE_FROM_AMAZON_BUSINESS",
+  "buyer_reference": "BUYER_REFERENCE_FROM_AMAZON_BUSINESS",
+  "purchase_order_number": "PO-2026-0001",
   "products": [
     {
       "name": "Amazon short link sample",
       "url": "https://amzn.asia/d/0a7kZ6KA",
+      "asin": "B012345678",
+      "buying_option_identifier": "BUYING_OPTION_IDENTIFIER_FROM_PRODUCT_SEARCH_OR_CART_API",
       "quantity": 2,
       "max_unit_price_jpy": 3000,
-      "note": "短縮URLはASINを抽出できないため、手動確認対象"
+      "external_id": "1",
+      "note": "本番ではProduct Search APIまたはCart APIで取得したbuyingOptionIdentifierを入れる"
     }
   ],
   "recipients": [
     {
-      "label": "home",
+      "label": "customer-a",
       "recipient_name": "山田 太郎",
       "postal_code": "100-0001",
       "prefecture": "東京都",
       "city": "千代田区",
       "line1": "千代田1-1",
       "line2": "サンプルマンション101",
+      "line3": "",
       "phone": "03-0000-0000",
-      "note": "サンプル住所。実運用ではローカルまたはSecretsで管理してください。"
+      "company_name": "サンプル株式会社",
+      "country_code": "JP",
+      "buyer_email": "buyer@example.co.jp",
+      "external_address_id": "ADDR-CUSTOMER-A",
+      "note": "顧客ごとに差し替える配送先テンプレート"
+    },
+    {
+      "label": "customer-b",
+      "recipient_name": "佐藤 花子",
+      "postal_code": "150-0001",
+      "prefecture": "東京都",
+      "city": "渋谷区",
+      "line1": "神宮前1-1",
+      "line2": "テストビル2F",
+      "phone": "03-1111-1111",
+      "company_name": "テスト合同会社",
+      "country_code": "JP",
+      "buyer_email": "buyer@example.co.jp",
+      "external_address_id": "ADDR-CUSTOMER-B"
     }
   ],
   "allocations": [
     {
       "product_name": "Amazon short link sample",
-      "recipient_label": "home",
-      "quantity": 2
+      "recipient_label": "customer-a",
+      "quantity": 1
+    },
+    {
+      "product_name": "Amazon short link sample",
+      "recipient_label": "customer-b",
+      "quantity": 1
     }
-  ],
-  "safety_mode": "manual_review_only"
+  ]
 }
