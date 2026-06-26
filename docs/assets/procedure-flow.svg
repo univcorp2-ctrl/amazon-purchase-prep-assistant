@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <rect width="1400" height="760" fill="#fffdf7"/>
+  <text x="700" y="55" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#e65100">処理フロー / Procedure Flow</text>
+  <defs><marker id="arr" markerWidth="12" markerHeight="12" refX="10" refY="3" orient="auto"><path d="M0,0 L0,6 L10,3 z" fill="#ef6c00"/></marker></defs>
+  <g font-family="Arial" font-size="17">
+    <g fill="#fff3e0" stroke="#ef6c00" stroke-width="3">
+      <rect x="70" y="140" width="230" height="95" rx="16"/><rect x="365" y="140" width="230" height="95" rx="16"/><rect x="660" y="140" width="230" height="95" rx="16"/><rect x="955" y="140" width="230" height="95" rx="16"/>
+      <rect x="215" y="350" width="230" height="95" rx="16"/><rect x="510" y="350" width="230" height="95" rx="16"/><rect x="805" y="350" width="230" height="95" rx="16"/><rect x="1100" y="350" width="230" height="95" rx="16"/>
+    </g>
+    <g text-anchor="middle" fill="#222">
+      <text x="185" y="176" font-weight="700">1. JSON編集</text><text x="185" y="205">Edit plan</text>
+      <text x="480" y="176" font-weight="700">2. 検証</text><text x="480" y="205">Validate</text>
+      <text x="775" y="176" font-weight="700">3. 出力生成</text><text x="775" y="205">Export files</text>
+      <text x="1070" y="176" font-weight="700">4. 環境変数</text><text x="1070" y="205">Set env / secrets</text>
+      <text x="330" y="386" font-weight="700">5. カート取得</text><text x="330" y="415">List carts</text>
+      <text x="625" y="386" font-weight="700">6. 商品追加</text><text x="625" y="415">Add items</text>
+      <text x="920" y="386" font-weight="700">7. 注文payload</text><text x="920" y="415">Order payload</text>
+      <text x="1215" y="386" font-weight="700">8. 注文API</text><text x="1215" y="415">Place order</text>
+    </g>
+    <line x1="300" y1="188" x2="365" y2="188" stroke="#ef6c00" stroke-width="4" marker-end="url(#arr)"/>
+    <line x1="595" y1="188" x2="660" y2="188" stroke="#ef6c00" stroke-width="4" marker-end="url(#arr)"/>
+    <line x1="890" y1="188" x2="955" y2="188" stroke="#ef6c00" stroke-width="4" marker-end="url(#arr)"/>
+    <path d="M1070 235 C1070 300 330 285 330 350" fill="none" stroke="#ef6c00" stroke-width="4" marker-end="url(#arr)"/>
+    <line x1="445" y1="398" x2="510" y2="398" stroke="#ef6c00" stroke-width="4" marker-end="url(#arr)"/>
+    <line x1="740" y1="398" x2="805" y2="398" stroke="#ef6c00" stroke-width="4" marker-end="url(#arr)"/>
+    <line x1="1035" y1="398" x2="1100" y2="398" stroke="#ef6c00" stroke-width="4" marker-end="url(#arr)"/>
+    <rect x="140" y="575" width="1120" height="90" rx="18" fill="#ffffff" stroke="#ffcc80" stroke-width="2"/>
+    <text x="700" y="615" text-anchor="middle" font-size="21" font-weight="700" fill="#bf360c">顧客名・住所はRecipientProfileとAllocationで毎回差し替え / Customer names and addresses change per RecipientProfile and Allocation</text>
+  </g>
+</svg>
