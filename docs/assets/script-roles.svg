@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <rect width="1400" height="760" fill="#f8fff8"/>
+  <text x="700" y="55" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#1b5e20">各スクリプトの役割 / Script Roles</text>
+  <g font-family="Arial" font-size="16">
+    <g fill="#e8f5e9" stroke="#2e7d32" stroke-width="2">
+      <rect x="70" y="115" width="280" height="110" rx="16"/><rect x="390" y="115" width="280" height="110" rx="16"/><rect x="710" y="115" width="280" height="110" rx="16"/><rect x="1030" y="115" width="280" height="110" rx="16"/>
+      <rect x="70" y="285" width="280" height="110" rx="16"/><rect x="390" y="285" width="280" height="110" rx="16"/><rect x="710" y="285" width="280" height="110" rx="16"/><rect x="1030" y="285" width="280" height="110" rx="16"/>
+      <rect x="390" y="455" width="280" height="110" rx="16"/><rect x="710" y="455" width="280" height="110" rx="16"/>
+    </g>
+    <g text-anchor="middle">
+      <text x="210" y="150" font-weight="700">models.py</text><text x="210" y="180">JSON構造 / Data models</text>
+      <text x="530" y="150" font-weight="700">parsers.py</text><text x="530" y="180">URL・ASIN解析 / URL parsing</text>
+      <text x="850" y="150" font-weight="700">safety.py</text><text x="850" y="180">計画検査 / Plan inspection</text>
+      <text x="1170" y="150" font-weight="700">business_payloads.py</text><text x="1170" y="180">API payload生成 / Payloads</text>
+      <text x="210" y="320" font-weight="700">business_api.py</text><text x="210" y="350">LWA + API client</text>
+      <text x="530" y="320" font-weight="700">exporters.py</text><text x="530" y="350">CSV Excel TXT JSON</text>
+      <text x="850" y="320" font-weight="700">cli.py</text><text x="850" y="350">コマンド / Commands</text>
+      <text x="1170" y="320" font-weight="700">api.py</text><text x="1170" y="350">FastAPI service</text>
+      <text x="530" y="490" font-weight="700">tests/</text><text x="530" y="520">単体テスト / Unit tests</text>
+      <text x="850" y="490" font-weight="700">docs/assets</text><text x="850" y="520">図解画像 / Visuals</text>
+    </g>
+  </g>
+</svg>
