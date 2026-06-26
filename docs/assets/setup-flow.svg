@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <rect width="1400" height="760" fill="#fcfcff"/>
+  <text x="700" y="55" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#00695c">初期設定ガイド / Setup Flow</text>
+  <g font-family="Arial" font-size="17">
+    <g fill="#e0f2f1" stroke="#00897b" stroke-width="3">
+      <rect x="100" y="130" width="340" height="105" rx="18"/><rect x="530" y="130" width="340" height="105" rx="18"/><rect x="960" y="130" width="340" height="105" rx="18"/>
+      <rect x="100" y="335" width="340" height="105" rx="18"/><rect x="530" y="335" width="340" height="105" rx="18"/><rect x="960" y="335" width="340" height="105" rx="18"/>
+    </g>
+    <g text-anchor="middle">
+      <text x="270" y="168" font-weight="700">1. Python環境</text><text x="270" y="198">venv + pip install</text>
+      <text x="700" y="168" font-weight="700">2. purchase_plan.json</text><text x="700" y="198">商品・顧客・住所</text>
+      <text x="1130" y="168" font-weight="700">3. Amazon Business</text><text x="1130" y="198">SPP / API roles</text>
+      <text x="270" y="373" font-weight="700">4. .env / Secrets</text><text x="270" y="403">LWA credentials</text>
+      <text x="700" y="373" font-weight="700">5. Payload生成</text><text x="700" y="403">Cart / Ordering JSON</text>
+      <text x="1130" y="373" font-weight="700">6. API実行</text><text x="1130" y="403">business-* --live</text>
+    </g>
+    <rect x="180" y="570" width="1040" height="90" rx="18" fill="#ffffff" stroke="#80cbc4" stroke-width="2"/>
+    <text x="700" y="610" text-anchor="middle" font-size="21" font-weight="700" fill="#004d40">English: configure the plan, credentials, references, then generate and submit official API payloads.</text>
+  </g>
+</svg>
