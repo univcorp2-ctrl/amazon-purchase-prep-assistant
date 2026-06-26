@@ -1,0 +1,37 @@
+{
+  "purpose": "Manual review taxonomy only. Not used for browser automation.",
+  "patterns": [
+    {
+      "name": "product_identity_review",
+      "manual_questions": [
+        "商品タイトルは購入予定のものと一致するか",
+        "販売元と出荷元は許容範囲か",
+        "ASINまたは商品識別子は記録済みか"
+      ]
+    },
+    {
+      "name": "price_and_quantity_review",
+      "manual_questions": [
+        "単価が上限以下か",
+        "数量制限や一時的な購入制限がないか",
+        "まとめ買い時の配送単位に問題がないか"
+      ]
+    },
+    {
+      "name": "delivery_review",
+      "manual_questions": [
+        "配送先候補が正しいか",
+        "配送予定日が用途に間に合うか",
+        "置き配や受取条件に問題がないか"
+      ]
+    },
+    {
+      "name": "business_approval_review",
+      "manual_questions": [
+        "承認者、支払い方法、Buying Groupが正しいか",
+        "組織の購買ルールに反していないか",
+        "監査ログに必要なメモが残っているか"
+      ]
+    }
+  ]
+}
