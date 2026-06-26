@@ -1,74 +1,54 @@
-# Architecture
+# Architecture / アーキテクチャ
 
-## 目的
+![Architecture overview](assets/architecture-overview.svg)
 
-Amazon Purchase Prep Assistantは、Amazon / Amazon Businessで購入前に必要になる情報整理を自動化するための支援ツールです。購入画面のブラウザ操作やチェックアウト自動化ではなく、購入計画の検証、配送先候補の整理、CSV/Excel/TXT/APIテンプレートの出力に限定します。
+## 日本語
 
-## 設計方針
+このアプリは、Amazon Businessの公式APIを使った購入作業を構造化するためのPythonプロジェクトです。中心になる入力は `purchase_plan.json` です。商品、ASIN、buying option、数量、顧客別配送先、購入グループ、支払い参照、PO番号を1つのJSONにまとめ、CLI / FastAPI / Exporter / Amazon Business API Clientが同じモデルを参照します。
 
-- ローカルファイルを入力にし、外部サイトへアクセスしない
-- Amazon短縮URLは解決しない
-- チェックアウトURLやカートURLは入力として拒否する
-- 実際の購入・住所入力・支払い操作は人間が公式画面で確認する
-- 公式API連携はAmazon Business APIの権限取得後にのみ行う
+## English
 
-## 処理フロー
+This application structures Amazon Business purchase automation around a single `purchase_plan.json`. Products, ASINs, buying options, quantities, recipient addresses, buying group references, payment references, and purchase order numbers are shared by the CLI, FastAPI service, exporters, and Amazon Business API client.
 
-```mermaid
-flowchart TD
-    A[購入計画 JSON] --> B[Pydanticモデル検証]
-    B --> C[URL/ASIN検証]
-    C --> D{安全ポリシーOK?}
-    D -- No --> E[エラーとして停止]
-    D -- Yes --> F[CSV出力]
-    D -- Yes --> G[Excel出力]
-    D -- Yes --> H[手動チェックリスト出力]
-    D -- Yes --> I[Amazon Business API dry-runテンプレート出力]
-    H --> J[人間が公式画面で確認]
-    I --> K[Amazon Business公式API連携の設計入力]
-```
-
-## コンポーネント
-
-### CLI
-
-`purchase-prep validate` と `purchase-prep export` を提供します。GitHub Actionsからも同じCLIを呼び出します。
-
-### FastAPI
-
-`/health`、`/policy`、`/validate-plan`、`/export-plan` を提供します。ブラウザ操作やチェックアウトAPIは提供しません。
-
-### Safety layer
-
-`src/purchase_prep_assistant/safety.py` が安全境界を担当します。チェックアウトURL、カートURL、購入フローURLを拒否し、`manual_review_only` のみ許可します。
-
-### Exporter
-
-`src/purchase_prep_assistant/exporters.py` がCSV、Excel、TXT、Amazon Business APIテンプレートを生成します。
-
-## GitHub Actions / CI
+## Component diagram
 
 ```mermaid
 flowchart LR
-    P[push / PR / workflow_dispatch] --> C[checkout]
-    C --> S[setup-python]
-    S --> I[pip install]
-    I --> L[ruff check]
-    L --> T[pytest]
-    T --> O[purchase-prep export]
-    O --> A[artifact upload]
+    A[purchase_plan.json] --> B[Pydantic Models]
+    B --> C[Validation]
+    B --> D[CSV / Excel / TXT Exporter]
+    B --> E[Cart Payload Builder]
+    B --> F[Ordering Payload Builder]
+    E --> G[Amazon Business Cart API]
+    F --> H[Amazon Business Ordering API]
+    I[.env / Secrets] --> J[LWA Token Exchange]
+    J --> G
+    J --> H
 ```
 
-CI artifact `purchase-prep-outputs` には、サンプル購入計画から生成したCSV / Excel / TXT / JSONが含まれます。
+## File roles / ファイル役割
 
-## GPT Image図解プロンプト
+![Script roles](assets/script-roles.svg)
 
-> 横長16:9、日本語、初心者向け。安全な購入準備アプリのアーキテクチャ図。入力: 購入計画JSON。中央: Pydantic検証、URL/ASIN検証、安全ポリシー。出力: CSV、Excel、手動チェックリスト、Amazon Business API dry-runテンプレート。右端: 人間による最終確認、公式Amazon Business API。赤い禁止領域: ブラウザ自動操作、CAPTCHA回避、ブロック回避、購入確定クリック。やさしい配色、明確な矢印、アイコン付き。
+| File | Role |
+|---|---|
+| `models.py` | Purchase plan, product, recipient, allocation models |
+| `business_payloads.py` | Cart API and Ordering API request payload generation |
+| `business_api.py` | Login with Amazon token exchange and official API HTTP client |
+| `exporters.py` | CSV, Excel, TXT, JSON bundle export |
+| `cli.py` | Local commands for validation, export, payload generation, live API calls |
+| `api.py` | FastAPI endpoints for app/server integration |
 
-## 今後の拡張
+## Procedure / 処理手順
 
-- Amazon Business API sandboxクライアント
-- 社内承認ワークフロー連携
-- 予算上限・数量上限の組織ルール化
-- 商品候補の重複検知
-- 受取人別の梱包/配送メモ出力
+![Procedure flow](assets/procedure-flow.svg)
+
+1. Fill `purchase_plan.json` with products, recipients, and references.
+2. Run `purchase-prep validate`.
+3. Run `purchase-prep business-cart-payload` or `purchase-prep business-order-payload`.
+4. Configure environment variables from `.env.example`.
+5. Use `business-list-carts`, `business-add-items`, and `business-place-order` with official Amazon Business credentials.
+
+## GPT-Image 2 prompt
+
+See `docs/gpt_image_2_visual_guide.md` for high-resolution image prompts matching the SVG diagrams in this repository.
